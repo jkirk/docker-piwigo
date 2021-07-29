@@ -1,0 +1,28 @@
+---
+version: "2.1"
+services:
+  piwigo-db:
+    env_file:
+      - piwigo-db.env
+    image: mariadb:10.5
+    container_name: piwigo-db
+    volumes:
+      - piwigo-db:/var/lib/mysql
+    restart: unless-stopped
+
+  piwigo:
+    image: ghcr.io/linuxserver/piwigo
+    container_name: piwigo
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Vienna
+    volumes:
+      - ./config:/config
+      - ./gallery:/gallery
+    ports:
+      - 8081:80
+    restart: unless-stopped
+
+volumes:
+  piwigo-db:
